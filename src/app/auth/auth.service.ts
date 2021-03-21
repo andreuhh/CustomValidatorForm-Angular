@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+// NB
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 interface UsernameAvailableResponse {
   available: boolean;
@@ -21,6 +24,8 @@ interface SignupResponse {
 export class AuthService {
   rootUrl = 'https://api.angular-email.com';
 
+  signedin$ = new BehaviorSubject(false); // i used $ because there is a community convention for the Observable
+
   constructor(
     private http: HttpClient
   ) { }
@@ -37,6 +42,10 @@ export class AuthService {
     return this.http.post<SignupResponse>(
       this.rootUrl + '/auth/signup',
       credentials
+    ).pipe(
+      tap(() => {
+        this.signedin$.next(true);
+      })
     );
   }
 }
