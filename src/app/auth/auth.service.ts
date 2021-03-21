@@ -48,4 +48,13 @@ export class AuthService {
       })
     );
   }
+
+  //check user authentication status
+  checkAuth() {
+    return this.http.get(`${this.rootUrl}/auth/signedin`).pipe(
+      tap(response => {
+        console.log(response);
+      })
+    )
+  }
 }
